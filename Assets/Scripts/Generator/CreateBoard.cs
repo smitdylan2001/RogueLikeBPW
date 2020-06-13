@@ -148,10 +148,10 @@ public class CreateBoard : MonoBehaviour
     }
     void InstantiateWalls ()
     {
-        float leftEdge = -1f;
-        float rightEdge = columns + 0f;
-        float bottomEdge = -1f;
-        float topEdge = rows + 0f;
+        float leftEdge = -2f;
+        float rightEdge = columns + 1f;
+        float bottomEdge = -2f;
+        float topEdge = rows + 1f;
 
         InstantiateVerticalWall(leftEdge, bottomEdge,topEdge);
         InstantiateVerticalWall(rightEdge, bottomEdge, topEdge);
