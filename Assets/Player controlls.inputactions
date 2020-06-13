@@ -19,7 +19,7 @@
                     "id": "3c768325-fcc9-46d1-a4e8-a7c902d67682",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press"
+                    "interactions": "Press(pressPoint=1)"
                 },
                 {
                     "name": "Down",
@@ -27,7 +27,31 @@
                     "id": "f97fd4fd-bdbb-4299-97d2-132d966a24f6",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "Press(pressPoint=1)"
+                },
+                {
+                    "name": "Right",
+                    "type": "Button",
+                    "id": "b3a1ddab-6bb2-4456-ac28-2cf677f77f90",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press"
+                },
+                {
+                    "name": "Left",
+                    "type": "Button",
+                    "id": "9531ab10-5ce6-4512-a981-6c326ca184ad",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press"
+                },
+                {
+                    "name": "Holding",
+                    "type": "Button",
+                    "id": "50a74bd6-f428-4597-92a7-17eb2b2096b7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Hold(duration=1)"
                 }
             ],
             "bindings": [
@@ -46,7 +70,7 @@
                     "name": "",
                     "id": "135f0c45-bc79-450d-be27-221ece7bb12d",
                     "path": "<Keyboard>/w",
-                    "interactions": "Press",
+                    "interactions": "Press(pressPoint=1)",
                     "processors": "",
                     "groups": "",
                     "action": "Up",
@@ -57,10 +81,76 @@
                     "name": "",
                     "id": "b1cc9bf1-5c6d-4b02-91ba-b15121cc484a",
                     "path": "<Keyboard>/s",
-                    "interactions": "",
+                    "interactions": "Press(pressPoint=1)",
                     "processors": "",
                     "groups": "",
                     "action": "Down",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "10065f78-c24f-402e-90d2-775d9c49d5a5",
+                    "path": "<Keyboard>/d",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Right",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "47542740-6941-4dda-b08b-ba9e25c64d9e",
+                    "path": "<Keyboard>/a",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Left",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "45c1908c-ec23-447a-8589-068b84712ff3",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Holding",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3deed414-3169-4fc4-a23e-7f90fd78c1db",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Holding",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "53a7b328-68b6-442a-a693-52fcf89b793e",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Holding",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0ee014c9-cabb-491a-9112-f000292eab19",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Holding",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
