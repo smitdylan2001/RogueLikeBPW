@@ -20,7 +20,7 @@ public class CreateBoard : MonoBehaviour
     public GameObject[] outerWallTiles;
     public GameObject[] floorTiles;
 
-    private TileType[][] tiles;
+    public TileType[][] tiles;
     private Room[] rooms;
     private Corridor[] corridors;
     private GameObject completeBoard;
@@ -73,6 +73,7 @@ public class CreateBoard : MonoBehaviour
                 corridors[i] = new Corridor();
                 corridors[i].SetupCorridor(rooms[i], corridorLenth, roomWidth, roomHeight, columns, rows, false);
             }
+            
         }
     }
 
@@ -92,6 +93,11 @@ public class CreateBoard : MonoBehaviour
                     Debug.Log(xCoord + " tiles " + yCoord);
 
                     tiles[xCoord][yCoord] = TileType.Floor;
+
+                    if (i == rooms.Length - 1)
+                    {
+                        GameManager.instance.SpawnEndPoint(new Vector2(xCoord, yCoord));
+                    }
                 }
             }
         }

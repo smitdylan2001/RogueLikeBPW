@@ -1,8 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public enum MoveDirection
 {
@@ -11,119 +11,92 @@ public enum MoveDirection
 
 public class Player : MonoBehaviour
 {
-    MoveDirection movedir;
-    bool move;
-    Vector2 targetLocation;
-    void Start()
+    private float moveSpeed = 3f;
+    private float gridSize = 1f;
+    private enum Orientation
     {
-        move = false;
+        Horizontal,
+        Vertical
+    };
+    private Orientation gridOrientation = Orientation.Horizontal;
+    private bool allowDiagonals = false;
+    private bool correctDiagonalSpeed = true;
+    private Vector2 input;
+    private bool isMoving = false;
+    private Vector3 startPosition;
+    private Vector3 endPosition;
+    private float t;
+    private float factor;
+    CreateBoard cb;
+
+    private void Start()
+    {
+        cb = GameObject.Find("GameManager").GetComponent<CreateBoard>();    
     }
 
-    void Update()
+    public void Update()
     {
-            if (Input.GetKeyDown(KeyCode.W))
+        if (!isMoving)
         {
-            movedir = MoveDirection.Up;
-            move = true;
-        }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            movedir = MoveDirection.Down;
-            move = true;
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            movedir = MoveDirection.Right;
-            move = true;
-        }
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            movedir = MoveDirection.Left;
-            move = true;
-        }
-        switch (movedir)
-        {    
-            case MoveDirection.none:
-                break;
-            case MoveDirection.Up:
-                if (move)
+            input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            if (!allowDiagonals)
+            {
+                if (Mathf.Abs(input.x) > Mathf.Abs(input.y))
                 {
-                    targetLocation = new Vector2(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y + 1f));
-                    move = false;
+                    input.y = 0;
                 }
-                transform.position = Vector2.MoveTowards(transform.position, targetLocation, 0.1f);
-                if (transform.position.y >= targetLocation.y)
+                else
                 {
-                    transform.position = targetLocation;
-                    movedir = MoveDirection.none;
+                    input.x = 0;
                 }
-                break;
-            case MoveDirection.Down:
-                if (move)
-                {
-                    targetLocation = new Vector2(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y - 1f));
-                    move = false;
-                }
-                transform.position = Vector2.MoveTowards(transform.position, targetLocation, 0.1f);
-                if (transform.position.y <= targetLocation.y)
-                {
-                    transform.position = targetLocation;
-                    movedir = MoveDirection.none;
-                }
-                break;
-            case MoveDirection.Right:
-                if (move)
-                {
-                    targetLocation = new Vector2(Mathf.RoundToInt(transform.position.x + 1f), Mathf.RoundToInt(transform.position.y));
-                    move = false;
-                }
-                transform.position = Vector2.MoveTowards(transform.position, targetLocation, 0.1f);
-                if (transform.position.x >= targetLocation.x)
-                {
-                    transform.position = targetLocation;
-                    movedir = MoveDirection.none;
-                }
-                break;
-            case MoveDirection.Left:
-                if (move)
-                {
-                    targetLocation = new Vector2(Mathf.RoundToInt( transform.position.x - 1f), Mathf.RoundToInt(transform.position.y));
-                    move = false;
-                }
-                transform.position = Vector2.MoveTowards(transform.position, targetLocation, 0.1f);
-                if (transform.position.x <= targetLocation.x)
-                {
-                    transform.position = targetLocation;
-                    movedir = MoveDirection.none;
-                }
-                break;
+            }
+
+            if (input != Vector2.zero)
+            {
+                StartCoroutine(move(transform));
+            }
         }
     }
 
-    
-    public void onUp()
+    public IEnumerator move(Transform transform)
     {
-        movedir = MoveDirection.Up;
-        move = true;
-    }
-    public void onDown()
-    {
-        movedir = MoveDirection.Down;
-        move = true;
-    }
-    public void onRight()
-    {
-        movedir = MoveDirection.Right;
-        move = true;
-    }
-    public void onLeft()
-    {
-        movedir = MoveDirection.Left;
-        move = true;
-    }
+        isMoving = true;
+        startPosition = transform.position;
 
-    public void onHold()
-    {
-        move = false;
+        
+
+        t = 0;
+
+        if (gridOrientation == Orientation.Horizontal)
+        {
+            endPosition = new Vector3(startPosition.x + System.Math.Sign(input.x) * gridSize, startPosition.y + System.Math.Sign(input.y) * gridSize, startPosition.z  );
+        }
+        else
+        {
+            endPosition = new Vector3(startPosition.x + System.Math.Sign(input.x) * gridSize, startPosition.y + System.Math.Sign(input.y) * gridSize, startPosition.z);
+        }
+
+        if (allowDiagonals && correctDiagonalSpeed && input.x != 0 && input.y != 0)
+        {
+            factor = 0.7f;
+        }
+        else
+        {
+            factor = 1f;
+        }
+        if (cb.tiles[(int)endPosition.x][(int)endPosition.y] == CreateBoard.TileType.Floor)
+        {
+            while (t < 1f)
+            {
+                t += Time.deltaTime * (moveSpeed / gridSize) * factor;
+                 transform.position = Vector3.Lerp(startPosition, endPosition, t);
+                yield return null;
+            }
+        }
+
+
+
+        isMoving = false;
+        yield return 0;
     }
 }
