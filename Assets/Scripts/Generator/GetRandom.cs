@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class GetRandom
+﻿public class GetRandom
 {
     public int min;
     public int max;

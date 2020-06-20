@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Room
 {
@@ -26,9 +24,11 @@ public class Room
     {
         enteringCorridor = corridor.direction;
         
+        //Randomly give width and height
         roomWidth = widthRange.Random;
         roomHeight = widthRange.Random;
 
+            //Check if room is in grid and change to desired position
         switch (corridor.direction)
         {
             case Direction.North:

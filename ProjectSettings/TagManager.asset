@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Wall
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -14,9 +15,9 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
+  - Wall
+  - Player
+  - minimap
   - 
   - 
   - 
@@ -44,6 +45,12 @@ TagManager:
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Walls
+    uniqueID: 2232876761
+    locked: 0
+  - name: Items
+    uniqueID: 3987188853
     locked: 0
   - name: Characters
     uniqueID: 2527901433

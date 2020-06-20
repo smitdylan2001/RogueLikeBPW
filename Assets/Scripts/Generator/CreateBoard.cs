@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class CreateBoard : MonoBehaviour
@@ -10,15 +8,22 @@ public class CreateBoard : MonoBehaviour
         Wall, Floor,
     }
 
+    public int enemyChance = 2; //percent
     public int columns = 100;
     public int rows = 100;
-    public GetRandom roomAmount = new GetRandom(12,20);
+    public GetRandom roomAmount = new GetRandom(5,15);
     public GetRandom roomWidth = new GetRandom(3,13);
     public GetRandom roomHeight = new GetRandom(3, 13);
-    public GetRandom corridorLenth = new GetRandom(1, 16);
+    public GetRandom corridorLenth = new GetRandom(1, 16); 
+    public GameObject[] wallTile;
     public GameObject[] wallTiles;
     public GameObject[] outerWallTiles;
+    public GameObject[] floorTile;
     public GameObject[] floorTiles;
+
+    public GameObject[] enemies;
+    public GameObject endPoint;
+    private bool endSpawned;
 
     public TileType[][] tiles;
     private Room[] rooms;
@@ -27,6 +32,8 @@ public class CreateBoard : MonoBehaviour
 
     void Start()
     {
+        endSpawned = false;
+
         //make GameObject to put the tiles in
         completeBoard = new GameObject("Board");
 
@@ -38,6 +45,7 @@ public class CreateBoard : MonoBehaviour
 
         InstantiateTiles();
         InstantiateWalls();
+        AstarPath.active.Scan();
     }
 
     void SetupTileArray()
@@ -90,13 +98,14 @@ public class CreateBoard : MonoBehaviour
                 for (int k = 0; k<currentRoom.roomHeight; k++)
                 {
                     int yCoord = currentRoom.yPos + k;
-                    Debug.Log(xCoord + " tiles " + yCoord);
 
+                    //fill array
                     tiles[xCoord][yCoord] = TileType.Floor;
 
+                    //spawn end point in last room
                     if (i == rooms.Length - 1)
                     {
-                        GameManager.instance.SpawnEndPoint(new Vector2(xCoord, yCoord));
+                        SpawnEndPoint(new Vector2(xCoord, yCoord));
                     }
                 }
             }
@@ -114,6 +123,7 @@ public class CreateBoard : MonoBehaviour
                 int xCoord = currentCorridor.startXPos;
                 int yCoord = currentCorridor.startYPos;
 
+                //Check direction of corridor
                 switch (currentCorridor.direction)
                 {
                     case Direction.North:
@@ -129,7 +139,8 @@ public class CreateBoard : MonoBehaviour
                         xCoord -= j;
                         break;
                 }
-                Debug.Log(xCoord + " corridors " +  yCoord);
+
+                //fill array
                 tiles[xCoord][yCoord] = TileType.Floor;
             }
         }
@@ -141,23 +152,33 @@ public class CreateBoard : MonoBehaviour
         {
             for (int j = 0; j < tiles[i].Length; j++)
             {
+                //Instantiate floor tiles for ground, then minimap
+                InstantiateFromArray(floorTiles, i, j);
+                InstantiateFromArray(floorTile, i, j);
                 if (tiles[i][j] == TileType.Floor)
                 {
-                    InstantiateFromArray(floorTiles, i, j);
+                    //Randomly spawn enemies on floor tiles
+                    int random = Random.Range(0, 100);
+                    if (enemyChance > random)
+                    {
+                        SpawnEnemy(new Vector2(i, j));
+                    }
                 }
                 if (tiles[i][j] == TileType.Wall)
                 {
+                    //Instantiate wall tiles for walls, then minimap
                     InstantiateFromArray(wallTiles, i, j);
+                    InstantiateFromArray(wallTile, i, j);
                 }
             }
         }
     }
     void InstantiateWalls ()
     {
-        float leftEdge = -2f;
-        float rightEdge = columns + 1f;
-        float bottomEdge = -2f;
-        float topEdge = rows + 1f;
+        float leftEdge = -1f;
+        float rightEdge = columns + 0f;
+        float bottomEdge = -1f;
+        float topEdge = rows + 0f;
 
         InstantiateVerticalWall(leftEdge, bottomEdge,topEdge);
         InstantiateVerticalWall(rightEdge, bottomEdge, topEdge);
@@ -169,7 +190,6 @@ public class CreateBoard : MonoBehaviour
     void InstantiateVerticalWall(float xCoord, float startY, float endY)
     {
         float currentY = startY;
-
         while (currentY <= endY)
         {
             InstantiateFromArray(outerWallTiles, xCoord, currentY);
@@ -180,7 +200,6 @@ public class CreateBoard : MonoBehaviour
     void InstantiateHorizontalWall(float yCoord, float startX, float endX)
     {
         float currentX = startX;
-
         while (currentX <= endX)
         {
             InstantiateFromArray(outerWallTiles, currentX, yCoord);
@@ -190,13 +209,28 @@ public class CreateBoard : MonoBehaviour
 
     void InstantiateFromArray(GameObject[] prefabs, float xCoord, float yCoord)
     {
+        //Instantiate tile
         int randonIndex = Random.Range(0, prefabs.Length);
-
         Vector3 position = new Vector3(xCoord, yCoord, 0f);
-
         GameObject tileInstance = Instantiate(prefabs[randonIndex], position, Quaternion.identity) as GameObject;
 
+        //Put instance in board gameobject
         tileInstance.transform.parent = completeBoard.transform;
     }
 
+    public void SpawnEndPoint(Vector2 point)
+    {
+        //Spawn end point if its not spawned already
+        if (!endSpawned)
+        {
+            Instantiate(endPoint, point, Quaternion.identity);
+            endSpawned = true;
+        }
+    }
+    public void SpawnEnemy(Vector2 point)
+    {
+        //Randomly spawn 1 enemy
+        int randonIndex = Random.Range(0, enemies.Length);
+        Instantiate(enemies[randonIndex], point, Quaternion.identity);  
+    }
 }

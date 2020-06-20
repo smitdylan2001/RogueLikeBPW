@@ -15,8 +15,8 @@ public class Corridor
         get
         {
             if (direction == Direction.North || direction == Direction.South) return startXPos;   //North & South
-            if (direction == Direction.East) return startXPos + corridorLength - 1;                       //East
-            return startXPos - corridorLength + 1;                                                        //West
+            if (direction == Direction.East) return startXPos + corridorLength - 1;               //East
+            return startXPos - corridorLength + 1;                                                //West
         }
     } 
 
@@ -25,8 +25,8 @@ public class Corridor
         get
         {
             if (direction == Direction.East || direction == Direction.West) return startYPos;     //East & West
-            if (direction == Direction.North) return startYPos + corridorLength - 1;                      //North
-            return startYPos - corridorLength + 1;                                                        //South
+            if (direction == Direction.North) return startYPos + corridorLength - 1;              //North
+            return startYPos - corridorLength + 1;                                                //South
         }
     }
 
@@ -42,8 +42,7 @@ public class Corridor
         if (!firstCorridor && direction == opposite)
         {
             int directionInt = (int)direction;
-            directionInt++;
-            directionInt = directionInt % 4;
+            directionInt = (directionInt + 1) % 4;
             direction = (Direction)directionInt;
         }
 

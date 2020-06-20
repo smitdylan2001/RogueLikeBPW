@@ -1,21 +1,33 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.IO;
 using UnityEngine;
 
+[Serializable]
+    public class SaveData
+    {
+        public int seed;
+        public int floor;
+        public int health;
+        public int enemieskilled;
+    }
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance = null;
-    public int floor;
+    public static int floor = 1;
     public int playerHealth = 5;
     public int damage = 2;
 
     public GameObject player;
-    public GameObject endPoint;
-    bool endSpawned;
 
     CreateBoard cb;
+    
+    internal SaveData saveData;
 
-    // Start is called before the first frame update
+    private void Awake()
+    {
+        LoadSave();
+    }
+
     void Start()
     {
         if (instance == null) instance = this;
@@ -23,26 +35,46 @@ public class GameManager : MonoBehaviour
 
         GameObject.Find("GameManager").GetComponent<CreateBoard>();
         player.SetActive(true);
-
-        endSpawned = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
-    }
-
-    void GetDamage()
-    {
-        playerHealth--;
-    }
-
-    public void SpawnEndPoint(Vector2 point)
-    {
-        if (!endSpawned)
+        if(playerHealth<= 0)
         {
-            Instantiate(endPoint, point, Quaternion.identity);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(0);
         }
+    }
+
+    public void GetDamage(int damage)
+    {
+        playerHealth -= damage;
+    }
+
+    public void LoadSave()
+    {
+        if (File.Exists(Application.dataPath + "/saveData.json"))
+        {
+            string json = File.ReadAllText(Application.dataPath + "/saveData.json");
+            if (json != null)
+            {
+            saveData = JsonUtility.FromJson<SaveData>(json);
+
+            }
+        }
+        else
+        {
+            saveData = new SaveData();
+        }
+    }
+
+
+    private void OnApplicationQuit()
+    {
+        SaveGame();
+    }
+    public void SaveGame()
+    {
+        string json = JsonUtility.ToJson(saveData);
+        File.WriteAllText(Application.dataPath + "/saveData.json", json);
     }
 }
