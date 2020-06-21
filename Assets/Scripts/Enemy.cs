@@ -1,7 +1,5 @@
 ﻿using Pathfinding;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -9,12 +7,15 @@ public class Enemy : MonoBehaviour
     GameObject player;
     Player playerScript;
     Vector3 targetPos;
+
     Seeker seeker;
+
     int damage = 1;
     bool canMove;
 
     void Start()
     {
+        //Get needed components
         player = GameObject.Find("Player");
         playerScript = player.GetComponent<Player>();
         targetPos = player.GetComponent<Transform>().position;
@@ -44,13 +45,14 @@ public class Enemy : MonoBehaviour
         //check if it hit the player
         if (collision.tag == "Player")
         {
+            //Do damange and freeze enemy
             GameManager.instance.GetDamage(damage);
             StartCoroutine(justAttacked());
             canMove = false;
         }
     }
 
-    //Add delay to give player time
+    //Freeze enemy to give player time to do something
     IEnumerator justAttacked()
     {
         yield return new WaitForSeconds(2.5f);

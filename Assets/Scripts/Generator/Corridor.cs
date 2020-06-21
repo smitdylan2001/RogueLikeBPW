@@ -1,15 +1,17 @@
 ﻿using UnityEngine;
+
 public enum Direction
-    {
-        North, East, South, West,
-    }
+{
+    North, East, South, West,
+}
+
 public class Corridor
 {
     public int startXPos;
     public int startYPos;
     public int corridorLength;
     public Direction direction;
-      
+ 
     public int EndPositionX
     {
         get

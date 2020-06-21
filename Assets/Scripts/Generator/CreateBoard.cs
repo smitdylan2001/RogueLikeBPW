@@ -45,11 +45,14 @@ public class CreateBoard : MonoBehaviour
 
         InstantiateTiles();
         InstantiateWalls();
+
+        //Generate Astar path
         AstarPath.active.Scan();
     }
 
     void SetupTileArray()
     {
+        //Make room for tiles in the array
         tiles = new TileType[columns][];
         for (int i = 0; i < tiles.Length; i++)
         {
@@ -190,6 +193,8 @@ public class CreateBoard : MonoBehaviour
     void InstantiateVerticalWall(float xCoord, float startY, float endY)
     {
         float currentY = startY;
+
+        //Instantiate tiles
         while (currentY <= endY)
         {
             InstantiateFromArray(outerWallTiles, xCoord, currentY);
@@ -200,6 +205,8 @@ public class CreateBoard : MonoBehaviour
     void InstantiateHorizontalWall(float yCoord, float startX, float endX)
     {
         float currentX = startX;
+
+        //Instantiate tiles
         while (currentX <= endX)
         {
             InstantiateFromArray(outerWallTiles, currentX, yCoord);

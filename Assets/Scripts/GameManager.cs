@@ -3,7 +3,6 @@ using System.Collections;
 using System.IO;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 [Serializable]
 public class SaveData
@@ -17,6 +16,11 @@ public class SaveData
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance = null;
+
+    CreateBoard cb;
+    
+    internal SaveData saveData;
+
     public static int floor = 1;
     public static int playerHealth = 5;
     public int damage = 2;
@@ -24,11 +28,6 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     public Player playerScript;
 
-    CreateBoard cb;
-    
-    internal SaveData saveData;
-
-    //Text stats;
     TextMeshProUGUI stats;
 
     private void Awake()
@@ -51,7 +50,7 @@ public class GameManager : MonoBehaviour
         //Hide curson
         Cursor.visible = false;
 
-        StartCoroutine(LateStart(.2f));
+        StartCoroutine(LateStart(.1f));
     }
 
     //Make sure the code does not break
@@ -63,11 +62,13 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        //Go to menu when health is 0
         if(playerHealth<= 0)
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(0);
         }
 
+        //Close game when pressing Esc
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Application.Quit();
@@ -80,6 +81,7 @@ public class GameManager : MonoBehaviour
         stats.text = "Floor: " + floor + "\nHealth: " + playerHealth + "\nAttacks: " + playerScript.attackCount;
     }
 
+    //Player recieves damage
     public void GetDamage(int damage)
     {
         playerHealth -= damage;
@@ -88,6 +90,7 @@ public class GameManager : MonoBehaviour
     
     public void LoadSave()
     {
+        //Check if save game exists
         if (File.Exists(Application.dataPath + "/saveData.json"))
         {
             string json = File.ReadAllText(Application.dataPath + "/saveData.json");
@@ -96,17 +99,20 @@ public class GameManager : MonoBehaviour
                 saveData = JsonUtility.FromJson<SaveData>(json);
             }
         }
+        //Make new save when no save data exists
         else
         {
             saveData = new SaveData();
         }
     }
 
-
+    //Save game when application quits
     private void OnApplicationQuit()
     {
         SaveGame();
     }
+
+    //Save the game
     public void SaveGame()
     {
         string json = JsonUtility.ToJson(saveData);

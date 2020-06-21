@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using System.Collections;
 using UnityEngine;
 
 public enum MoveDirection
@@ -11,26 +8,30 @@ public enum MoveDirection
 
 public class Player : MonoBehaviour
 {
-    private float moveSpeed = 3f;
-    private float gridSize = 1f;
     private enum Orientation
     {
         Horizontal,
         Vertical
     }
-
     private Orientation gridOrientation = Orientation.Horizontal;
+
+    private float moveSpeed = 3f;
+    private float gridSize = 1f;
     private bool allowDiagonals = false;
     private bool correctDiagonalSpeed = true;
     private Vector2 input;
     private bool isMoving = false;
+
     private Vector3 startPosition;
     private Vector3 endPosition;
+
     private float t;
     private float factor;
-    CreateBoard cb;
+
     public int attackCount = 5;
     float attackArea = 3;
+
+    CreateBoard cb;
 
     private void Start()
     {

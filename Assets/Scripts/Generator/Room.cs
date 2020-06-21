@@ -22,13 +22,14 @@ public class Room
     //other rooms setup
     public void SetupRoom(GetRandom widthRange, GetRandom heightRange, int columns, int rows, Corridor corridor)
     {
+        //Check where the corridor came from
         enteringCorridor = corridor.direction;
         
         //Randomly give width and height
         roomWidth = widthRange.Random;
         roomHeight = widthRange.Random;
 
-            //Check if room is in grid and change to desired position
+        //Check if room is in grid and change to desired position
         switch (corridor.direction)
         {
             case Direction.North:
