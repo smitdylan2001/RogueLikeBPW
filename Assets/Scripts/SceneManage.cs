@@ -5,6 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class SceneManage : MonoBehaviour
 {
+    private void Start()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
     //go to first scene
     public void Begin()
     {

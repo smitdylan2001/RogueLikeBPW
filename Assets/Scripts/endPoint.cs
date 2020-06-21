@@ -9,8 +9,11 @@ public class endPoint : MonoBehaviour
         //If player hits end point go to new floor
         if (collision.gameObject.tag == "Player")
         {
+            //Change floor int
             GameManager.floor++;
-            Debug.LogError(GameManager.floor);
+            GameManager.instance.ChangeUI();
+
+            //reload scene to regen dungeon
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }

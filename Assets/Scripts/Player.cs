@@ -29,12 +29,13 @@ public class Player : MonoBehaviour
     private float t;
     private float factor;
     CreateBoard cb;
-    int attackCount = 5;
+    public int attackCount = 5;
     float attackArea = 3;
 
     private void Start()
     {
-        cb = GameObject.Find("GameManager").GetComponent<CreateBoard>();    
+        cb = GameObject.Find("GameManager").GetComponent<CreateBoard>();
+        attackCount = 5;
     }
 
     public void Update()
@@ -72,7 +73,7 @@ public class Player : MonoBehaviour
             while (i < hitColliders.Length)
             {
                 //Destroy walls
-                if (hitColliders[i].tag == "Wall")
+                if (hitColliders[i].tag == "Wall" && attackCount > 0)
                 {
                     Destroy(hitColliders[i].gameObject);
                     cb.tiles[(int)hitColliders[i].gameObject.transform.position.x][(int)hitColliders[i].gameObject.transform.position.y] = CreateBoard.TileType.Floor;
@@ -91,9 +92,15 @@ public class Player : MonoBehaviour
             //limit attacks
             if (attackCount > 5) attackCount = 5;
 
-            //if empty, use a small attack
-            if (attackCount <= 0) attackArea = 1.2f;
+            //if empty, use a small attack and prevent negatives
+            if (attackCount <= 0)
+            {
+                attackArea = 1.2f;
+                attackCount = 0;
+            }
             else attackArea = 3f;
+
+            GameManager.instance.ChangeUI();
         }
     }
 

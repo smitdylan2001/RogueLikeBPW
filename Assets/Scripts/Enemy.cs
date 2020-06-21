@@ -53,7 +53,7 @@ public class Enemy : MonoBehaviour
     //Add delay to give player time
     IEnumerator justAttacked()
     {
-        yield return new WaitForSeconds(4);
+        yield return new WaitForSeconds(2.5f);
         canMove = true;
         yield return null;
     }
